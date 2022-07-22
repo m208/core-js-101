@@ -28,8 +28,12 @@
  *      .catch((error) => console.log(error.message)) // 'Error: Wrong parameter is passed!
  *                                                    //  Ask her again.';
  */
-function willYouMarryMe(/* isPositiveAnswer */) {
-  throw new Error('Not implemented');
+function willYouMarryMe(isPositiveAnswer) {
+  return new Promise((resolve, reject) => {
+    if (typeof isPositiveAnswer !== 'boolean') reject(new Error('Wrong parameter is passed! Ask her again.'));
+    const answer = isPositiveAnswer ? 'Hooray!!! She said "Yes"!' : 'Oh no, she said "No".';
+    resolve(answer);
+  });
 }
 
 
@@ -48,8 +52,12 @@ function willYouMarryMe(/* isPositiveAnswer */) {
  *    })
  *
  */
-function processAllPromises(/* array */) {
-  throw new Error('Not implemented');
+function processAllPromises(array) {
+  return new Promise((resolve, reject) => {
+    const all = Promise.all(array);
+    all.then((values) => resolve(values));
+    all.catch((err) => reject(err));
+  });
 }
 
 /**
@@ -71,8 +79,12 @@ function processAllPromises(/* array */) {
  *    })
  *
  */
-function getFastestPromise(/* array */) {
-  throw new Error('Not implemented');
+function getFastestPromise(array) {
+  return new Promise((resolve, reject) => {
+    const race = Promise.race(array);
+    race.then((values) => resolve(values));
+    race.catch((err) => reject(err));
+  });
 }
 
 /**
@@ -92,8 +104,34 @@ function getFastestPromise(/* array */) {
  *    });
  *
  */
-function chainPromises(/* array, action */) {
-  throw new Error('Not implemented');
+function chainPromises(array, action) {
+  const result = new Promise((res) => {
+    const results = [];
+    let promisesCompleted = 0;
+    const allProms = new Promise((resolve) => {
+      array.forEach((promis) => {
+        promis.then((value) => {
+          results.push(value);
+          promisesCompleted += 1;
+          if (promisesCompleted === array.length) {
+            resolve(results);
+          }
+        });
+        promis.catch(() => {
+          promisesCompleted += 1;
+          if (promisesCompleted === array.length) {
+            resolve(results);
+          }
+        });
+      });
+    });
+
+    allProms.then((values) => {
+      res(values.reduce(action));
+    });
+  });
+
+  return result;
 }
 
 module.exports = {
