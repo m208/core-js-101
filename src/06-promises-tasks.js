@@ -110,19 +110,17 @@ function chainPromises(array, action) {
     let promisesCompleted = 0;
     const allProms = new Promise((resolve) => {
       array.forEach((promis) => {
-        promis.then((value) => {
-          results.push(value);
-          promisesCompleted += 1;
-          if (promisesCompleted === array.length) {
-            resolve(results);
-          }
-        });
-        promis.catch(() => {
-          promisesCompleted += 1;
-          if (promisesCompleted === array.length) {
-            resolve(results);
-          }
-        });
+        promis
+          .then((value) => {
+            results.push(value);
+          })
+          .catch(() => { })
+          .finally(() => {
+            promisesCompleted += 1;
+            if (promisesCompleted === array.length) {
+              resolve(results);
+            }
+          });
       });
     });
 
