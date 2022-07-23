@@ -55,8 +55,9 @@ function willYouMarryMe(isPositiveAnswer) {
 function processAllPromises(array) {
   return new Promise((resolve, reject) => {
     const all = Promise.all(array);
-    all.then((values) => resolve(values));
-    all.catch((err) => reject(err));
+    all
+      .then((values) => resolve(values))
+      .catch((err) => reject(err));
   });
 }
 
@@ -82,8 +83,9 @@ function processAllPromises(array) {
 function getFastestPromise(array) {
   return new Promise((resolve, reject) => {
     const race = Promise.race(array);
-    race.then((values) => resolve(values));
-    race.catch((err) => reject(err));
+    race
+      .then((values) => resolve(values))
+      .catch((err) => reject(err));
   });
 }
 
